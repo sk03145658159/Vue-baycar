@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="bootstrap.css">
+    <script src="vue.js"></script>
+</head>
+<style>
+    span{
+        width:80%;
+        height: 100%;
+    }
+    .caret{
+        margin:5px;
+    }
+</style>
+<body>
+    <div class="container">
+        <table class="table table-bordered table-striped">
+             <tr>
+                <th>商品编号</th>
+                <th>商品名称</th>
+                <th>商品单价<span class="caret" @click="sort1"></span><span class="caret" style="transform: rotate(180deg)" @click="sort2"></span></th>
+                <th>购买数量</th>
+                <th>消费金额</th>
+                <th>操作</th>
+            </tr>
+                <tr v-for="item in datas">     <!-- ***在此处循环 -->
+                    <td>{{item.id}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.grade}}</td>
+                    <td v-if="item.num<10">
+                        <button type="button" @click="add(item)">+</button>
+                        <!-- <input type="text"  v-model="item.num"> -->
+                        <select class="form-control" v-model="item.num">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                            <option>6</option>
+                            <option>7</option>
+                            <option>8</option>
+                            <option>9</option>
+                            <option>10</option>
+                            <option>11</option>
+                            <option>12</option>
+                            <option>13</option>
+                            <option>14</option>
+                            <option>15</option>
+                        </select>
+                        <button type="button" @click="dec(item)">-</button>
+                    </td>
+                    <td v-else>
+                        <button type="button" @click="add(item)">+</button>
+                        <!-- <span>{{item.num}}</span> -->
+                        <input type="text" v-model="item.num">
+                        <button type="button" @click="dec(item)">-</button>
+                    </td>
+                    <td>{{item.grade*item.num}}</td>
+                    <td><button class="btn btn-danger" type="button" @click="dele(item.id)">删除</button></td>
+                </tr>
+            <tr>
+                <td>商品总量：</td>
+                <td>{{nums}}</td>
+                <td>消费总金额：</td>
+                <td colspan="3"> {{grades}}</td>
+            </tr>
+        </table>
+       
+    </div>
+</body>
+</html>
+<script>
+    new Vue({
+        el:".container",
+        data:{
+            datas:[
+                {
+                    id:1,
+                    name:'安踏球鞋',
+                    grade:260,
+                    num:1
+                },
+                {
+                    id:2,
+                    name:'篮球',
+                    grade:480,
+                    num:3
+                },
+                {
+                    id:3,
+                    name:'联想笔记本',
+                    grade:5600,
+                    num:1
+                }
+            ],
+            statue:true
+        },
+        methods:{
+            add(obj){
+                obj.num=parseInt(obj.num)+1
+            },
+            dec(obj){
+                obj.num=parseInt(obj.num)-1
+            },
+            dele(id){
+               this.datas=this.datas.filter((item)=>{
+                   if(item.id!=id){
+                       return item
+                   }
+               })
+            },
+            sort1(){
+                     this.datas=this.datas.sort(function(a,b){
+                        return a.grade<b.grade
+                    })
+                },
+            sort2(){
+                    this.datas=this.datas.sort(function(a,b){
+                    return a.grade>b.grade
+                })
+            }
+        },
+        computed:{
+            nums(){
+                let num1=0
+                for(let i=0;i<this.datas.length;i++){
+                    num1=num1+parseInt(this.datas[i].num)
+                }
+                return num1
+            },
+            grades(){
+                let grade1=0
+                for(let i=0;i<this.datas.length;i++){
+                    grade1=grade1+this.datas[i].grade*this.datas[i].num
+                }
+                return grade1
+            }
+        }
+    })
+//     Vue.component("car"函数名,props:["dates"]接受参数(传参时传入列表型){           组件的制作,相当于函数
+//         "template"模板:`<div class="container">
+//         <table class="table table-bordered table-striped">
+//              <tr>
+//                 <th>商品编号</th>
+//                 <th>商品名称</th>
+//                 <th>商品单价</th>
+//                 <th>购买数量</th>
+//                 <th>消费金额</th>
+//                 <th>操作</th>
+//             </tr>
+//             <ul v-for="item in datas">
+//                 <tr>
+//                     <td v-text="item.id"></td>
+//                     <td>{{item.name}}</td>
+//                     <td>{{item.grade}}</td>
+//                     <td>
+//                         <select class="form-control" v-model="item.num">
+//                             <option>1</option>
+//                             <option>2</option>
+//                             <option>3</option>
+//                             <option>4</option>
+//                             <option>5</option>
+//                         </select>
+//                     </td>
+//                     <td>{{item.grade*item.num}}</td>
+//                     <th><button class="btn btn-danger" type="button">删除</button></th>
+//                 </tr>
+//             </ul>
+//             <tr>
+//                 <td>商品总量：</td>
+//                 <td></td>
+//                 <td>消费总金额：</td>
+//                 <td colspan="3"> </td>
+//             </tr>
+//         </table>
+       
+//     </div>`,
+//     data(){
+//         return{
+//             datas:[
+//                 {
+//                     id:1,
+//                     name:'安踏球鞋',
+//                     grade:260,
+//                     num:1
+//                 },
+//                 {
+//                     id:2,
+//                     name:'安踏球鞋',
+//                     grade:260,
+//                     num:1
+//                 }
+//             ]}
+//         }
+// })
+</script>
